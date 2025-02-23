@@ -35,6 +35,10 @@ export default function Page() {
     fetchEmployees();
   }, []);
 
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <>
       {loading ? (

@@ -44,6 +44,7 @@ const EmployeeForm = ({ isOpen, onOpenChange }: EmployeeFormProps) => {
       onOpenChange(false);
     } catch (error) {
       toast("Error creating employee");
+      console.error(error);
     }
   };
 
