@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "@/components/card/Card";
-import CardSkeleton from "@/components/card/CardSkeleton";
+import CardSkeleton from "@/components/skeletons/CardSkeleton";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

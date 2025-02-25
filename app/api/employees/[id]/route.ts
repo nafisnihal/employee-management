@@ -1,3 +1,5 @@
+// app/api/employees/[id]/route.ts
+
 import { connectDB } from "@/lib/db";
 import Employee from "@/lib/models";
 import { NextResponse } from "next/server";
@@ -26,8 +28,6 @@ export async function GET(req: Request) {
     });
   }
 }
-
-// app/api/employees/[id]/route.ts
 
 export async function PUT(req: Request) {
   const id = req.url.split("/").pop() || "";
