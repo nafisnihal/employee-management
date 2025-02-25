@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import DeleteDialog from "@/components/DeleteDialog";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -24,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { SquarePen, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Employee {
   _id: string;
@@ -44,6 +46,10 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [employeesPerPage, setEmployeesPerPage] = useState<number>(5);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null
   );
 
@@ -88,6 +94,26 @@ export default function Page() {
     setIsDialogOpen(true);
   };
 
+  const handleDelete = async () => {
+    if (!employeeToDelete) return;
+    try {
+      await axios.delete(`/api/employees/${employeeToDelete._id}`);
+      setEmployees((prev) =>
+        prev.filter((emp) => emp._id !== employeeToDelete._id)
+      );
+      setFilteredEmployees((prev) =>
+        prev.filter((emp) => emp._id !== employeeToDelete._id)
+      );
+    } catch (error) {
+      console.error("Error deleting employee", error);
+      toast("Error deleting employee");
+    } finally {
+      setDeleteDialogOpen(false);
+      setEmployeeToDelete(null);
+      toast("Employee deleted successfully!");
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between my-4">
@@ -103,6 +129,8 @@ export default function Page() {
       {/* Search and Rows Per Page Selector */}
       <div className="flex items-center justify-between gap-4 mt-8">
         <Input
+          id="search"
+          name="search"
           type="text"
           placeholder="Search by name or email..."
           value={searchTerm}
@@ -171,7 +199,13 @@ export default function Page() {
                       >
                         <SquarePen />
                       </Button>
-                      <Button className="cursor-pointer">
+                      <Button
+                        onClick={() => {
+                          setEmployeeToDelete(employee);
+                          setDeleteDialogOpen(true);
+                        }}
+                        className="cursor-pointer"
+                      >
                         <Trash2 />
                       </Button>
                     </TableCell>
@@ -182,14 +216,14 @@ export default function Page() {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex justify-center justify-end my-4 gap-2">
+      <div className="flex justify-center justify-end mt-3 gap-2">
         {Array.from(
           { length: Math.ceil(filteredEmployees.length / employeesPerPage) },
           (_, index) => (
             <Button
               key={index}
               onClick={() => paginate(index + 1)}
-              className={`px-3  ${
+              className={`px-3 ${
                 currentPage === index + 1
                   ? "bg-black text-white dark:bg-white dark:text-black"
                   : "bg-transparent text-black dark:text-white"
@@ -206,6 +240,11 @@ export default function Page() {
         onOpenChange={setIsDialogOpen}
         employee={selectedEmployee}
         refreshData={fetchEmployees}
+      />
+      <DeleteDialog
+        deleteDialogOpen={deleteDialogOpen}
+        handleDelete={handleDelete}
+        onDeleteDialogOpenChange={setDeleteDialogOpen}
       />
     </div>
   );

@@ -16,7 +16,7 @@ const employeeSchema = z.object({
   phone: z.string().min(10, "Phone must be at least 10 characters"),
   email: z.string().email("Invalid email address"),
   address: z.string().min(10, "Address must be at least 10 characters"),
-  imageUrl: z.string().url("Invalid URL").optional(),
+  imageUrl: z.union([z.string().url("Invalid URL"), z.literal("")]).optional(),
 });
 
 type EmployeeFormInputs = z.infer<typeof employeeSchema>;
@@ -135,7 +135,7 @@ const EmployeeForm = ({
             )}
           </div>
           <div>
-            <Label htmlFor="imageUrl">Image URL</Label>
+            <Label htmlFor="imageUrl">Image URL (Optional)</Label>
             <Input {...register("imageUrl")} id="imageUrl" />
             {errors.imageUrl && (
               <span className="text-red-500 text-sm">

@@ -30,7 +30,7 @@ const sidebarItems = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props} className="">
-      <SidebarContent className="pt-16">
+      <SidebarContent className="pt-12">
         <SidebarGroup>
           <SidebarGroupLabel>Employee Views</SidebarGroupLabel>
           <SidebarGroupContent>
