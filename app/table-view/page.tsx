@@ -42,6 +42,7 @@ export default function Page() {
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  console.log("🚀 ~ Page ~ error:", error);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [employeesPerPage, setEmployeesPerPage] = useState<number>(5);
@@ -59,11 +60,14 @@ export default function Page() {
       setEmployees(response.data.employees);
       setFilteredEmployees(response.data.employees); // Ensure search works on full dataset
     } catch (error) {
+      console.log("🚀 ~ fetchEmployees ~ error:", error);
       setError("Error fetching employee data.");
       console.error(error);
     } finally {
       setLoading(false);
     }
+    console.log("🚀 ~ fetchEmployees ~ error:", error);
+    console.log("🚀 ~ fetchEmployees ~ error:", error);
   };
 
   useEffect(() => {
@@ -105,6 +109,7 @@ export default function Page() {
         prev.filter((emp) => emp._id !== employeeToDelete._id)
       );
     } catch (error) {
+      console.log("🚀 ~ handleDelete ~ error:", error);
       console.error("Error deleting employee", error);
       toast("Error deleting employee");
     } finally {
@@ -112,6 +117,8 @@ export default function Page() {
       setEmployeeToDelete(null);
       toast("Employee deleted successfully!");
     }
+    console.log("🚀 ~ handleDelete ~ error:", error);
+    console.log("🚀 ~ handleDelete ~ error:", error);
   };
 
   return (
